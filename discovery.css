@@ -23,3 +23,19 @@
 @media(prefers-reduced-motion:reduce){.disco-3d-wrap,.disco-pin{transition:none}}
 
 .source-correction{border-color:#85bc9f;background:#15392f}.source-correction h2{color:#d5fff4}.source-correction p{line-height:1.65}.source-correction a{color:#b9efff}
+
+/* FUSION 3.2 — practical focus mechanics: blurry until the user calibrates the specimen. */
+.micro-lab-panel .micro-viewport{position:relative;isolation:isolate;background:#061622;}
+.micro-lab-panel #micro-image{width:100%;height:100%;display:block;object-fit:cover;transform-origin:center;transition:filter .09s linear,transform .2s ease;user-select:none;}
+.micro-lab-panel .micro-lens-glow{position:absolute;inset:0;pointer-events:none;border-radius:50%;box-shadow:inset 0 0 65px 25px #030b19be,inset 0 0 8px 4px #314b5c;}
+.micro-focus-meter{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;margin-top:14px;font-weight:750;color:#95e5cf;}
+.micro-focus-meter b{white-space:nowrap;color:#e2edff;font-variant-numeric:tabular-nums}
+.micro-meter{height:7px;border-radius:15px;background:#22394d;margin:9px 0 20px;overflow:hidden;border:1px solid #466072}
+.micro-meter span{display:block;width:0;height:100%;background:linear-gradient(90deg,#e9a16e,#73e4cf);border-radius:10px;transition:width .08s linear;}
+.micro-lab-panel .micro-range input[type=range]{touch-action:pan-y;width:100%;min-height:42px;}
+.micro-challenge{color:#aed1db;line-height:1.6;font-size:13px;min-height:30px;}
+.micro-sources{padding:16px 18px;border:1px solid #3b5569;border-radius:13px;background:#0f2133;margin:18px 0;color:#e0f2ff}
+.micro-sources summary{cursor:pointer;color:#8ae8d7;font-weight:750}
+.micro-sources li{margin:10px 0;line-height:1.55}.micro-sources a{color:#9fcfff;text-decoration:underline;text-underline-offset:3px}
+#micro-next{margin-top:10px;}
+@media(max-width:610px){.micro-focus-meter{flex-wrap:wrap;}.micro-lab-panel .micro-viewport{max-width:360px;border-width:9px}.micro-lab-panel .micro-range{flex-wrap:wrap;}}

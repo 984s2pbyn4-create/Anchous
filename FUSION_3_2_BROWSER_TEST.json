@@ -1,0 +1,149 @@
+{
+  "390": {
+    "home": 1,
+    "nav": [
+      "nav-home",
+      "nav-tickets",
+      "nav-bank",
+      "nav-discovery",
+      "nav-more"
+    ],
+    "repeated_route_cards": 0,
+    "overflow": 0,
+    "exam_setup": 1,
+    "exam_started": true,
+    "question_text": "Что означает смешанная инфекция?",
+    "exam_immunity": true,
+    "practice_hub": true,
+    "bank": true,
+    "micro_first_disabled": true,
+    "micro_image_loaded": true,
+    "focus_scenes": [
+      {
+        "start": "0% резкости",
+        "sharp": "100% резкости",
+        "ready": true,
+        "filter": "blur(12.48px) contrast(0.75) saturate(0.8)",
+        "feedback": "✓ Верно!"
+      },
+      {
+        "start": "0% резкости",
+        "sharp": "100% резкости",
+        "ready": true,
+        "filter": "blur(2.47211px) contrast(1.10955) saturate(1.0397)",
+        "feedback": "✓ Верно!"
+      },
+      {
+        "start": "0% резкости",
+        "sharp": "100% резкости",
+        "ready": true,
+        "filter": "blur(0px) contrast(1.2) saturate(1.1)",
+        "feedback": "✓ Верно!"
+      }
+    ],
+    "lab_schemes_button": true,
+    "svg_models": 12,
+    "tour_steps_declared": 11,
+    "tour_steps_visited": 11,
+    "tour_closed": true,
+    "errors": []
+  },
+  "768": {
+    "home": 1,
+    "nav": [
+      "nav-home",
+      "nav-tickets",
+      "nav-bank",
+      "nav-discovery",
+      "nav-more"
+    ],
+    "repeated_route_cards": 0,
+    "overflow": 0,
+    "exam_setup": 1,
+    "exam_started": true,
+    "question_text": "Объясните по памяти положение из конспекта (фрагмент 2). Опорные слова: Трансплацентарно- ",
+    "exam_immunity": true,
+    "practice_hub": true,
+    "bank": true,
+    "micro_first_disabled": true,
+    "micro_image_loaded": true,
+    "focus_scenes": [
+      {
+        "start": "0% резкости",
+        "sharp": "100% резкости",
+        "ready": true,
+        "filter": "blur(10.169px) contrast(0.83333) saturate(0.855553)",
+        "feedback": "✓ Верно!"
+      },
+      {
+        "start": "0% резкости",
+        "sharp": "100% резкости",
+        "ready": true,
+        "filter": "blur(2.26658px) contrast(1.11667) saturate(1.04445)",
+        "feedback": "✓ Верно!"
+      },
+      {
+        "start": "0% резкости",
+        "sharp": "100% резкости",
+        "ready": true,
+        "filter": "blur(2.74453px) contrast(1.117) saturate(1.04467)",
+        "feedback": "✓ Верно!"
+      }
+    ],
+    "lab_schemes_button": true,
+    "svg_models": 12,
+    "tour_steps_declared": 11,
+    "tour_steps_visited": 11,
+    "tour_closed": true,
+    "errors": []
+  },
+  "1280": {
+    "home": 1,
+    "nav": [
+      "nav-home",
+      "nav-tickets",
+      "nav-bank",
+      "nav-discovery",
+      "nav-more"
+    ],
+    "repeated_route_cards": 0,
+    "overflow": 0,
+    "exam_setup": 1,
+    "exam_started": true,
+    "question_text": "Объясните по памяти положение из конспекта (фрагмент 3). Опорные слова: взрослых · животны",
+    "exam_immunity": true,
+    "practice_hub": true,
+    "bank": true,
+    "micro_first_disabled": true,
+    "micro_image_loaded": true,
+    "focus_scenes": [
+      {
+        "start": "0% резкости",
+        "sharp": "100% резкости",
+        "ready": true,
+        "filter": "blur(12.48px) contrast(0.75) saturate(0.8)",
+        "feedback": "✓ Верно!"
+      },
+      {
+        "start": "0% резкости",
+        "sharp": "100% резкости",
+        "ready": true,
+        "filter": "blur(0.004624px) contrast(1.19983) saturate(1.09989)",
+        "feedback": "✓ Верно!"
+      },
+      {
+        "start": "0% резкости",
+        "sharp": "100% резкости",
+        "ready": true,
+        "filter": "blur(0px) contrast(1.2) saturate(1.1)",
+        "feedback": "✓ Верно!"
+      }
+    ],
+    "lab_schemes_button": true,
+    "svg_models": 12,
+    "tour_steps_declared": 11,
+    "tour_steps_visited": 11,
+    "tour_closed": true,
+    "errors": []
+  }
+}

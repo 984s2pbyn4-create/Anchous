@@ -49,14 +49,14 @@ function installHome(){
  root.classList.add('fusion-home');const c=studyCounts(),next=topics.find(t=>!progress[topicId(t)])||topics[0];
  const header=document.createElement('div');header.className='fusion-breadcrumb';header.innerHTML='<strong>Твоя учебная станция / Главная</strong><span class="fusion-micro-status">✦ 27 билетов · один маршрут</span>';
  old.before(header);
- const hero=document.createElement('section');hero.className='fusion-hero';hero.innerHTML=`<div class="fusion-hero-copy"><span class="fusion-hero-pill">✧ &nbsp; ПРОДОЛЖАЙ ИССЛЕДОВАНИЕ</span><h1>Микромир ближе,<br><em>чем кажется.</em></h1><p>Понимай строение клетки, исследуй 3D-модели и готовься к экзамену в своём темпе.</p><div class="fusion-hero-actions"><button class="fusion-cta primary" id="fusion-open-atlas">${icon('cube',17)} Открыть 3D-атлас</button><button class="fusion-cta" id="fusion-open-next">Продолжить урок ${icon('arrow',16)}</button></div></div><div class="fusion-hero-art">${heroIllustration()}<span class="fusion-float-label"><b>01 · Бактериальная клетка</b>Структуры, функции, взаимодействия</span></div>`;
+ const hero=document.createElement('section');hero.className='fusion-hero';hero.innerHTML=`<div class="fusion-hero-copy"><span class="fusion-hero-pill">✧ &nbsp; ПРОДОЛЖАЙ ИССЛЕДОВАНИЕ</span><h1>Микромир ближе,<br><em>чем кажется.</em></h1><p>Понимай строение клетки, исследуй 3D-модели и готовься к экзамену в своём темпе.</p><div class="fusion-hero-actions"><button class="fusion-cta primary" id="fusion-open-next">${icon('book',17)} Продолжить урок</button><button class="fusion-cta" id="fusion-open-exam">Начать экзамен ${icon('arrow',16)}</button></div></div><div class="fusion-hero-art">${heroIllustration()}<span class="fusion-float-label"><b>01 · Бактериальная клетка</b>Структуры, функции, взаимодействия</span></div>`;
  old.replaceWith(hero);
  const stats=document.createElement('div');stats.className='fusion-stats';stats.innerHTML=`<div class="fusion-stat"><div class="fusion-stat-icon">${icon('book',22)}</div><div><b>${c.done}<span style="font-size:14px;font-weight:700;color:var(--fusion-muted)">/${c.total}</span></b><small>Изучено уроков</small></div></div><div class="fusion-stat"><div class="fusion-stat-icon">${icon('ticket',21)}</div><div><b>${c.tickets}<span style="font-size:14px;font-weight:700;color:var(--fusion-muted)">/27</span></b><small>Билетов повторено</small></div></div><div class="fusion-stat"><div class="fusion-stat-icon">${icon('check',23)}</div><div><b>${c.bank}<span style="font-size:14px;font-weight:700;color:var(--fusion-muted)">/67</span></b><small>Заданий опробовано</small></div></div>`;
  hero.after(stats);
- const paths=document.createElement('section');paths.className='fusion-routes';paths.innerHTML=`<div class="fusion-headline"><div><span class="fusion-section-tag">ИССЛЕДОВАТЬ · ИЗУЧАТЬ · ПРИМЕНЯТЬ</span><h2>Выбери свой маршрут</h2><p>Пять пространств для разных способов обучения.</p></div></div><div class="fusion-route-grid">${routeCard({id:'fusion-route-3d',cls:'fusion-route-atlas',icon:'cube',label:'NEON LAB / 3D',title:'Живая анатомия',copy:'Вращай бактерию, отключай слои и находи структуры.'})}${routeCard({id:'fusion-route-tickets',icon:'book',label:'SCIENCE ATLAS',title:'Экзаменационные билеты',copy:'Оригинальные тексты и объяснения.'})}${routeCard({id:'fusion-route-trainer',icon:'check',label:'ПРОВЕРКА ЗНАНИЙ',title:'Предметный тренажёр',copy:'67 вопросов и разбор ошибок.'})}${routeCard({id:'fusion-route-scope',cls:'fusion-route-scope',icon:'microscope',label:'SCOPE STATION',title:'Виртуальный микроскоп',copy:'Фокус, морфология и учебные образцы.'})}${routeCard({id:'fusion-route-mission',cls:'fusion-route-mission',icon:'trophy',label:'MICRO MISSION',title:'Маршрут достижений',copy:'Реальные цели на основе твоего прогресса.'})}</div>`;
- stats.after(paths);
+ // The five duplicate route cards were removed. Sections now live in one menu;
+ // the homepage is a dashboard for the next actual learning action, not a second menu.
  const focus=document.createElement('section');focus.className='fusion-focus';focus.innerHTML=`<div class="fusion-focus-title"><span class="fusion-section-tag">ПЕРСОНАЛЬНЫЙ МАРШРУТ</span><h2>Три шага на сегодня</h2><p>Короткая сессия: изучи тему, закрепи карточками и проверь понимание. К повторению сейчас: <b>${c.due}</b>.</p></div><div class="fusion-checks"><button class="fusion-check" id="fusion-plan-lesson"><span class="dot">${icon('book',19)}</span><span><b>Изучи одну тему</b><small>${esc(next.title)}</small></span><span class="arrow">→</span></button><button class="fusion-check" id="fusion-plan-recall"><span class="dot">${icon('repeat',20)}</span><span><b>Повтори карточки</b><small>${c.due?`Запланировано ${c.due} повторений`:'Открой режим интервального повторения'}</small></span><span class="arrow">→</span></button><button class="fusion-check" id="fusion-plan-test"><span class="dot">${icon('check',20)}</span><span><b>Проверь знания</b><small>Тематические вопросы с объяснениями</small></span><span class="arrow">→</span></button></div>`;
- paths.after(focus);
+ stats.after(focus);
  // Move the already wired controls rather than cloning them, preserving original import/export and filters.
  const shortcuts=root.querySelector('.study-shortcuts'),bar=root.querySelector('.toolbar'),list=root.querySelector('#topiclist'),originalLibraryHeading=bar?.previousElementSibling,source=root.querySelector('.source');
  const library=document.createElement('section');library.className='fusion-library';library.id='fusion-library';library.innerHTML=`<div class="fusion-headline"><div><span class="fusion-section-tag">НАУЧНЫЙ АТЛАС · 31 УРОК</span><h2>Библиотека тем</h2><p>Выбери раздел или найди конкретный термин.</p></div></div>`;
@@ -67,9 +67,19 @@ function installHome(){
  if(originalLibraryHeading&&originalLibraryHeading.tagName==='H2')originalLibraryHeading.remove();
  root.querySelector('.dashboard-note')?.remove();root.querySelector('#home-discovery')?.remove();
  const open=(id,fn)=>{document.getElementById(id).onclick=fn};
- open('fusion-open-atlas',()=>MicroDiscovery.open('atlas'));open('fusion-open-next',()=>lesson(next));
- open('fusion-route-3d',()=>MicroDiscovery.open('atlas'));open('fusion-route-tickets',()=>ticketLibrary());open('fusion-route-trainer',()=>bankHome());open('fusion-route-scope',()=>MicroDiscovery.open('microscope'));open('fusion-route-mission',missions);
+ open('fusion-open-next',()=>lesson(next));open('fusion-open-exam',()=>examSetup());
  open('fusion-plan-lesson',()=>lesson(next));open('fusion-plan-recall',()=>dueReview());open('fusion-plan-test',()=>bankHome());
+ scrollTo(0,0);
+}
+function practiceHub(){
+ root.className='fusion-practice-hub';root.innerHTML=`<button class="back" id="practice-back">← На главную</button><div class="fusion-practice-hero"><div class="eyebrow">MICRO LAB / ПРАКТИКА</div><h1>Проверяй знания без лишних переходов</h1><p>Все способы самопроверки собраны здесь. Выбирайте формат: экзамен, тесты с вариантами или повторение карточек.</p></div><div class="fusion-practice-grid">
+ <button class="fusion-practice-card" id="practice-exam"><span>01 / ЭКЗАМЕН</span><strong>Начать экзамен</strong><small>10, 20 или 30 вопросов из выбранных тем. Если нет готового теста, отвечайте своими словами и сверяйте конспект.</small><b>Выбрать параметры →</b></button>
+ <button class="fusion-practice-card" id="practice-bank"><span>02 / ТРЕНАЖЁР</span><strong>Предметные вопросы</strong><small>67 авторских заданий с разбором ответов и повторением ошибок.</small><b>Открыть тренажёр →</b></button>
+ <button class="fusion-practice-card" id="practice-repeat"><span>03 / ПОВТОРЕНИЕ</span><strong>Карточки памяти</strong><small>Вернитесь к определениям, которые пора повторить по расписанию.</small><b>Открыть карточки →</b></button></div>`;
+ document.getElementById('practice-back').onclick=home;
+ document.getElementById('practice-exam').onclick=examSetup;
+ document.getElementById('practice-bank').onclick=bankHome;
+ document.getElementById('practice-repeat').onclick=dueReview;
  scrollTo(0,0);
 }
 function missions(){
@@ -83,15 +93,30 @@ function missions(){
  document.getElementById('fusion-mission-back').onclick=home;root.querySelectorAll('[data-mission]').forEach(b=>b.onclick=items[+b.dataset.mission].action);
  document.getElementById('fusion-mission-3d').onclick=()=>MicroDiscovery.open('atlas');document.getElementById('fusion-mission-scope').onclick=()=>MicroDiscovery.open('microscope');scrollTo(0,0);
 }
-function installNav(){const nav=document.querySelector('.global-nav');if(!nav)return;
- const mission=document.createElement('button');mission.type='button';mission.id='nav-mission';mission.textContent='♢ Миссии';mission.onclick=missions;
- const more=nav.querySelector('#nav-more');nav.insertBefore(mission,more||null);
- const dropdown=nav.querySelector('#nav-overflow');if(dropdown){const copy=document.createElement('button');copy.type='button';copy.textContent='♢ Миссии';copy.dataset.forNav='nav-mission';copy.onclick=()=>{dropdown.hidden=true;more?.setAttribute('aria-expanded','false');missions()};dropdown.append(copy)}
- nav.addEventListener('click',e=>{const target=e.target.closest('button');if(target&&target.parentElement===nav&&target.id!=='nav-more')setTimeout(updateRoute,0)});
+function installNav(){
+ const nav=document.querySelector('.global-nav');if(!nav)return;
+ const primary=[['nav-home','⌂ Главная'],['nav-tickets','▦ Билеты'],['nav-bank','✦ Практика'],['nav-discovery','⬡ Лаборатория'],['nav-more','☷ Ещё']];
+ for(const [id,label] of primary){const b=nav.querySelector('#'+id);if(b)b.textContent=label}
+ nav.querySelector('#nav-home').onclick=home;
+ nav.querySelector('#nav-bank').onclick=practiceHub;
+ nav.querySelector('#nav-discovery').onclick=()=>MicroDiscovery.open('atlas');
+ for(const b of [...nav.querySelectorAll(':scope > button')]){
+  if(!primary.some(([id])=>id===b.id))b.remove();
+ }
+ const more=nav.querySelector('#nav-more'),menu=nav.querySelector('#nav-overflow');
+ if(menu){menu.innerHTML='<button type="button" data-extra="stats">▤ Мой прогресс</button><button type="button" data-extra="missions">♢ Миссии</button><button type="button" data-extra="glossary">▤ Атлас терминов</button><button type="button" data-extra="svg">◉ 12 интерактивных схем</button>';
+  menu.querySelectorAll('[data-extra]').forEach(b=>b.onclick=()=>{menu.hidden=true;more.setAttribute('aria-expanded','false');const action=b.dataset.extra;if(action==='stats')statistics();if(action==='missions')missions();if(action==='glossary')MicroGlossary.open();if(action==='svg')MicroVisualLab.open()});
+ }
+ nav.addEventListener('click',e=>{const button=e.target.closest('button');if(button&&button.parentElement===nav&&button.id!=='nav-more')requestAnimationFrame(updateRoute)});
 }
-function updateRoute(){const isDiscovery=!!root.querySelector('.disco-tabs');const isScope=isDiscovery&&!!root.querySelector('[data-explore="microscope"].active');
- root.classList.toggle('fusion-discovery-view',isDiscovery);root.classList.toggle('fusion-scope-view',isScope);root.classList.toggle('fusion-home',!!root.querySelector('.fusion-hero'));
- const r=isDiscovery?'nav-discovery':root.classList.contains('fusion-home')?'nav-home':root.querySelector('.fusion-mission-hero')?'nav-mission':root.querySelector('#ticket-search')?'nav-tickets':root.querySelector('#bank-kind')?'nav-bank':root.querySelector('.gl-layout')?'nav-lab':'';
+function updateRoute(){
+ const isDiscovery=!!root.querySelector('.disco-tabs');
+ const isScope=isDiscovery&&!!root.querySelector('[data-explore="microscope"].active');
+ root.classList.toggle('fusion-discovery-view',isDiscovery);
+ root.classList.toggle('fusion-scope-view',isScope);
+ root.classList.toggle('fusion-home',!!root.querySelector('.fusion-hero'));
+ const practice=!!root.querySelector('.fusion-practice-hero,#begin-exam,#exit-exam,#bank-kind,#exam-feedback,#exam-again,#due-back');
+ const r=isDiscovery?'nav-discovery':root.classList.contains('fusion-home')?'nav-home':root.querySelector('#ticket-search')?'nav-tickets':practice?'nav-bank':null;
  document.querySelectorAll('.global-nav>button').forEach(b=>{const selected=b.id===r;b.classList.toggle('fusion-nav-active',selected);if(selected)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
 }
 installHeader();installNav();
@@ -99,6 +124,6 @@ const previousHome=home;
 home=function(){previousHome();installHome();updateRoute()};
 const observer=new MutationObserver(()=>{if(window.__fusionPending)return;window.__fusionPending=true;requestAnimationFrame(()=>{window.__fusionPending=false;updateRoute()})});
 observer.observe(root,{childList:true,subtree:true});
-window.MicroFusion={home:()=>home(),missions,theme:()=>theme};
+window.MicroFusion={home:()=>home(),practice:practiceHub,missions,theme:()=>theme};
 home();
 })();

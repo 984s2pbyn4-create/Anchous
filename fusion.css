@@ -283,3 +283,16 @@ body:not(.fusion-dark) .coverage-card{background:#fff;color:#1d2945;border-color
 body:not(.fusion-dark) .lab-card{background:#fff;color:#1d2945;border-color:#dce4ee}
 body:not(.fusion-dark) .lab-caption{background:#e5f7f2;color:#173f40}
 body:not(.fusion-dark) .panel summary{color:#207e79}
+
+/* FUSION 3.2 — one navigation, one home workflow (no repeated directory cards). */
+body .global-nav #nav-more{display:flex!important;align-items:center;}
+@media(min-width:1141px){
+ .global-nav .nav-overflow{left:calc(100% + 12px)!important;right:auto!important;top:auto!important;bottom:12px!important;}
+}
+.fusion-practice-hero{background:radial-gradient(circle at 95% 0%,#8972f644,transparent 50%),linear-gradient(130deg,#202d51,#15243b);color:#eff6ff;border:1px solid #3c4c73;border-radius:24px;padding:clamp(23px,4vw,38px);margin:10px 0 20px;}
+.fusion-practice-hero .eyebrow{color:#93e2d6}.fusion-practice-hero h1{color:#fff;font-size:clamp(25px,3vw,35px);margin:12px 0}.fusion-practice-hero p{color:#c7d5eb;line-height:1.65;max-width:700px}
+.fusion-practice-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin:22px 0 40px;}
+.fusion-practice-card{text-align:left;display:flex;flex-direction:column;gap:14px;background:var(--fusion-card);color:var(--fusion-ink);border:1px solid var(--fusion-line);border-radius:19px;padding:24px;min-height:245px;box-shadow:var(--fusion-shadow)}
+.fusion-practice-card:hover{border-color:var(--fusion-violet);transform:translateY(-2px)}.fusion-practice-card>span{font-size:11px;letter-spacing:.13em;font-weight:800;color:var(--fusion-violet-strong)}.fusion-practice-card strong{font-size:21px;line-height:1.24}.fusion-practice-card small{color:var(--fusion-muted);font-size:13px;line-height:1.6;flex:1}.fusion-practice-card>b{color:var(--fusion-teal);font-size:13px}
+@media(max-width:820px){.fusion-practice-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:610px){.fusion-practice-grid{grid-template-columns:1fr}.fusion-practice-card{min-height:0;padding:20px;gap:10px}.fusion-practice-hero{border-radius:18px}.global-nav>#nav-home,.global-nav>#nav-tickets,.global-nav>#nav-bank,.global-nav>#nav-discovery,.global-nav>#nav-more{font-size:10px!important;padding:7px 2px!important;}}

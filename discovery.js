@@ -15,12 +15,13 @@ const sceneItems=[
 const quizOrder=['nucleoid','wall','ribosome','flagellum','membrane'];
 const state={mode:'positive',hidden:new Set(),selected:'nucleoid',quizIndex:0,quiz:false, yaw:-.29,pitch:.25,zoom:6.7};
 let currentRenderer=null;
-function markup(title,body){return `<button class="back" id="disco-back">← К темам</button><div class="eyebrow">MICRO LAB / FUSION · LAB</div><h1>${title}</h1><p class="muted">${body}</p><div class="disco-tabs" role="group" aria-label="Разделы исследовательской лаборатории"><button data-explore="atlas">◉ 3D-атлас</button><button data-explore="microscope">🔬 Микроскоп</button><button data-explore="cases">◇ Учебные кейсы</button><button data-explore="method">▤ Собери схему</button></div><div id="disco-content"></div>`}
+function markup(title,body){return `<button class="back" id="disco-back">← К темам</button><div class="eyebrow">MICRO LAB / FUSION · LAB</div><h1>${title}</h1><p class="muted">${body}</p><div class="disco-tabs" role="group" aria-label="Разделы исследовательской лаборатории"><button data-explore="atlas">◉ 3D-атлас</button><button data-explore="microscope">🔬 Микроскоп</button><button data-explore="cases">◇ Учебные кейсы</button><button data-explore="method">▤ Собери схему</button><button id="disco-to-svg">◌ 12 схем</button></div><div id="disco-content"></div>`}
 function enter(tab='atlas'){
  window.MicroAnimationController?.stop?.();
  const app=$('#app');app.innerHTML=markup('Лаборатория открытий','Вращайте 3D-модель, меняйте слои, исследуйте микроскопическое поле и решайте задачи. Модели концептуальные, не в масштабе и не являются диагностическими протоколами.');
  $('#disco-back').onclick=()=>home();
  document.querySelectorAll('[data-explore]').forEach(b=>b.onclick=()=>switchTab(b.dataset.explore));
+ $('#disco-to-svg').onclick=()=>window.MicroVisualLab?.open?.();
  switchTab(tab);window.scrollTo(0,0);
 }
 function switchTab(tab){
@@ -105,26 +106,52 @@ function createRenderer(canvas,host,st,selectPart){
  const observer=new ResizeObserver(()=>{if(canvas.isConnected)draw();else observer.disconnect()});observer.observe(canvas);draw();return {draw};
 }
 const microScenes=[
- {title:'Фиолетовые кокки, сгруппированные скоплениями',shape:'cluster',gram:'positive',answer:'cocci',desc:'Модель поля зрения: кокки в скоплениях, условная грамположительная окраска. Форма и группировка не подтверждают вид возбудителя.'},
- {title:'Розовые палочки',shape:'rods',gram:'negative',answer:'rods',desc:'Модель поля зрения: короткие палочки, условная грамотрицательная окраска. Для видовой идентификации нужны дополнительные исследования.'},
- {title:'Фиолетовые цепочки кокков',shape:'chains',gram:'positive',answer:'cocci',desc:'Модель поля зрения: кокки в цепочках, условная грамположительная окраска.'}
+ {title:'Кокки в скоплениях',image:'micrographs/cocci.webp',answer:'cocci',initial:14,best:66,desc:'Кокки — бактерии с округлыми клетками. Здесь показаны условно грамположительно окрашенные скопления. Группировка не устанавливает вид бактерии.'},
+ {title:'Палочковидные формы',image:'micrographs/bacilli.webp',answer:'rods',initial:82,best:31,desc:'Палочковидные бактерии имеют вытянутую форму. Розовая окраска иллюстрирует грамотрицательный вариант, но по одной форме и цвету вид определить нельзя.'},
+ {title:'Спиральные формы — спирохеты',image:'micrographs/spirochetes.webp',answer:'spiral',initial:12,best:74,desc:'Спирохеты — тонкие спиралевидные бактерии. Эта иллюстрация имитирует темнопольный способ наблюдения. Спирохеты и спириллы относятся к разным морфологическим группам; видовая идентификация здесь невозможна.'}
 ];
-function microscope(host){let scene=0,focus=55,mag=40;
- host.innerHTML='<section class="disco-panel"><div class="eyebrow">ВИРТУАЛЬНЫЙ МИКРОСКОП · СИНТЕТИЧЕСКОЕ ИЗОБРАЖЕНИЕ</div><h2>Распознай форму клетки</h2><p class="muted small">Это созданные программой рисунки, а не фотографии препаратов. Измените фокус и условное увеличение, затем ответьте на вопрос.</p><div class="micro-grid"><div><div class="micro-viewport"><canvas id="micro-canvas" width="640" height="640" role="img" aria-label="Синтетическое поле микроскопа с окрашенными бактериями"></canvas></div><label class="micro-range">Фокус <input id="micro-focus" type="range" min="0" max="100" value="55" step="1"></label><label class="micro-range">Условное увеличение <select id="micro-magnification"><option value="10">×10</option><option selected value="40">×40</option><option value="100">×100</option></select></label></div><div class="micro-work"><div class="eyebrow">ОБРАЗЕЦ <span id="micro-count">1 / 3</span></div><h3>Какая форма бактерий изображена?</h3><div class="disco-answers"><button data-shape="cocci">Кокки</button><button data-shape="rods">Палочки</button><button data-shape="spiral">Спиральные формы</button></div><p id="micro-feedback" class="feedback-line" role="status">Наведи фокус на изображение и выбери ответ.</p><button class="btn primary" id="micro-next" disabled>Следующий образец →</button><div class="disco-explain" id="micro-explain"></div></div></div><p class="source">Никаких выводов о конкретном возбудителе по одному изображению делать нельзя. Увеличение и фокус условны.</p></section>';
- const canvas=$('#micro-canvas'),ctx=canvas.getContext('2d'),S=canvas.width;
- function rand(seed){let x=Math.sin(seed*127.1+54.7)*43758.5453;return x-Math.floor(x)}
- function render(){
-  const s=microScenes[scene];ctx.clearRect(0,0,S,S);const bg=ctx.createRadialGradient(310,320,45,320,320,322);bg.addColorStop(0,'#faf3dc');bg.addColorStop(.72,'#dbe6e5');bg.addColorStop(.98,'#697e93');bg.addColorStop(1,'#12283a');ctx.fillStyle=bg;ctx.fillRect(0,0,S,S);ctx.save();ctx.beginPath();ctx.arc(S/2,S/2,309,0,Math.PI*2);ctx.clip();const scale=mag===10?.6:mag===40?1:1.45;ctx.translate(320,320);ctx.scale(scale,scale);ctx.translate(-320,-320);
-  for(let i=0;i<180;i++){ctx.fillStyle=`rgba(99,103,121,${(.025+rand(i+scene)*.06).toFixed(3)})`;ctx.beginPath();ctx.arc(rand(i*11+scene)*S,rand(i*13+scene)*S,rand(i*19+scene)*3,0,Math.PI*2);ctx.fill()}
-  const color=s.gram==='positive'?'#6931ad':'#d75f91';ctx.fillStyle=color;ctx.strokeStyle=s.gram==='positive'?'#41217a':'#ae3a6b';ctx.lineWidth=2;
-  function cocci(x,y,r){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle='rgba(255,255,255,.25)';ctx.beginPath();ctx.arc(x-r*.2,y-r*.18,r*.28,0,Math.PI*2);ctx.fill();ctx.fillStyle=color}
-  if(s.shape==='cluster'){for(let k=0;k<32;k++){const centerX=75+rand(k*11)*480,centerY=65+rand(k*7)*490;for(let j=0;j<5;j++){const angle=j*2.39+rand(k),r=8+rand(k*15+j)*12;cocci(centerX+Math.cos(angle)*r,centerY+Math.sin(angle)*r,8+rand(j+k)*3)}}}
-  if(s.shape==='chains'){for(let k=0;k<24;k++){const x=55+rand(k*17)*530,y=60+rand(k*9)*520;for(let j=0;j<5;j++)cocci(x+j*15,y+Math.sin(j*.7+k)*7,7.4)}}
-  if(s.shape==='rods'){for(let k=0;k<170;k++){const x=30+rand(k*7)*560,y=25+rand(k*3+10)*550,len=20+rand(k*9)*15;ctx.save();ctx.translate(x,y);ctx.rotate(rand(k*19)*6.28);ctx.beginPath();if(ctx.roundRect)ctx.roundRect(-len/2,-5,len,10,5);else ctx.rect(-len/2,-5,len,10);ctx.fill();ctx.stroke();ctx.restore()}}
-  ctx.restore();const blur=Math.abs(focus-55)*.18;canvas.style.filter=`blur(${blur.toFixed(1)}px)`;
+function microscope(host){
+ let scene=0,focus=0,mag=40,answered=false;
+ host.innerHTML=`<section class="disco-panel micro-lab-panel"><div class="eyebrow">SCOPE STATION / ТРЕНАЖЁР МОРФОЛОГИИ</div><h2>Настрой микроскоп и определи форму</h2><p class="muted small">Три <b>сгенерированные научно-стилизованные иллюстрации</b>, а не настоящие микрофотографии. Настройте резкость каждого образца — иначе варианты ответа недоступны.</p>
+ <div class="micro-grid"><div><div class="micro-viewport"><img id="micro-image" alt="Сгенерированная иллюстрация микроскопического поля" width="708" height="708" draggable="false"/><div class="micro-lens-glow" aria-hidden="true"></div></div>
+ <div class="micro-focus-meter"><span id="micro-focus-status" role="status">Настройте фокус</span><b id="micro-sharpness">0% резкости</b></div><div class="micro-meter"><span id="micro-meter-fill"></span></div>
+ <label class="micro-range" for="micro-focus">Точная фокусировка <input id="micro-focus" type="range" min="0" max="100" step="1" value="0" aria-describedby="micro-focus-hint" /></label>
+ <p class="muted small" id="micro-focus-hint">Двигайте ползунок, пока изображение не станет чётким. Резкость меняется по мере движения.</p>
+ <label class="micro-range" for="micro-magnification">Цифровое приближение <select id="micro-magnification"><option value="10">×10</option><option value="40" selected>×40</option><option value="100">×100</option></select></label></div>
+ <div class="micro-work"><div class="eyebrow">ОБРАЗЕЦ <span id="micro-count">1 / 3</span></div><h3>Какая форма бактерий видна?</h3><p class="micro-challenge" id="micro-challenge">Сначала настройте изображение.</p>
+ <div class="disco-answers"><button data-shape="cocci" disabled>Кокки — шаровидные</button><button data-shape="rods" disabled>Палочковидные бактерии</button><button data-shape="spiral" disabled>Спиральные формы</button></div><p id="micro-feedback" class="feedback-line" role="status">Наведи резкость, чтобы разблокировать ответ.</p><div class="disco-explain" id="micro-explain"></div><button class="btn primary" id="micro-next" disabled>Следующий образец →</button></div></div>
+ <details class="micro-sources"><summary>Источники реальных микрофотографий для сравнения</summary><p class="muted small">В симуляторе используются созданные изображения. Реальные препараты и их подписи доступны отдельно:</p><ul><li><a target="_blank" rel="noopener" href="https://commons.wikimedia.org/wiki/File:Gram_Positive_Coccus_Bacteria.jpg">Грамположительные кокки — Wikimedia Commons, Kucantikuu, CC BY 4.0</a></li><li><a target="_blank" rel="noopener" href="https://commons.wikimedia.org/wiki/File:Gram_positive_coccus_and_gram_negative_rod.png">Кокк и палочка — Mikael Häggström, CC0</a></li><li><a target="_blank" rel="noopener" href="https://wwwn.cdc.gov/phil/Details.aspx?pid=20519">Спирохеты Borrelia mayonii — CDC PHIL № 20519, public domain</a></li></ul></details>
+ <p class="source">Учебный симулятор: резкость и увеличение моделируются цифровыми эффектами, не имитируют реальные оптические параметры. Не предназначено для диагностики.</p></section>`;
+ const img=$('#micro-image'),focusSlider=$('#micro-focus'),buttons=[...host.querySelectorAll('[data-shape]')];
+ function updateFocus(){
+  const s=microScenes[scene],distance=Math.abs(focus-s.best),sharp=Math.max(0,Math.round(100-distance*2.6)),ready=distance<=6;
+  const blur=Math.min(15,distance*.24),scale=mag===10?1:mag===40?1.22:1.75;
+  img.style.filter=`blur(${blur.toFixed(2)}px) contrast(${(.75+sharp*.0045).toFixed(2)}) saturate(${(.8+sharp*.003).toFixed(2)})`;
+  img.style.transform=`scale(${scale})`;
+  $('#micro-sharpness').textContent=`${sharp}% резкости`;
+  $('#micro-meter-fill').style.width=sharp+'%';
+  $('#micro-focus-status').textContent=ready?'✓ Изображение в фокусе':'◌ Наведите резкость';
+  $('#micro-focus-hint').textContent=ready?'Отлично! Можно определить форму бактерий.':'Найдите максимум резкости, перемещая ползунок.';
+  $('#micro-challenge').textContent=ready?'Определите форму по морфологии.':'Настройте фокус для выбора ответа.';
+  if(!answered){buttons.forEach(b=>b.disabled=!ready);$('#micro-feedback').textContent=ready?'✓ Образец сфокусирован. Теперь выберите форму бактерий.':'Настраивайте ползунок, пока изображение не станет чётким.';}
  }
- function setScene(){focus=55;$('#micro-focus').value=55;$('#micro-count').textContent=`${scene+1} / ${microScenes.length}`;$('#micro-feedback').textContent='Наведи фокус на изображение и выбери ответ.';$('#micro-explain').textContent='';$('#micro-next').disabled=true;host.querySelectorAll('[data-shape]').forEach(b=>{b.disabled=false;b.classList.remove('correct','wrong')});render()}
- $('#micro-focus').oninput=e=>{focus=+e.target.value;render()};$('#micro-magnification').onchange=e=>{mag=+e.target.value;render()};host.querySelectorAll('[data-shape]').forEach(b=>b.onclick=()=>{const ok=b.dataset.shape===microScenes[scene].answer;$('#micro-feedback').textContent=ok?'✓ Форма определена верно.':'✕ Это другая форма. Посмотрите объяснение.';$('#micro-explain').textContent=microScenes[scene].desc;b.classList.add(ok?'correct':'wrong');host.querySelectorAll('[data-shape]').forEach(x=>{x.disabled=true;if(x.dataset.shape===microScenes[scene].answer)x.classList.add('correct')});$('#micro-next').disabled=false});$('#micro-next').onclick=()=>{scene=(scene+1)%microScenes.length;setScene()};setScene();
+ function setScene(){
+  answered=false;const s=microScenes[scene];focus=s.initial;focusSlider.value=focus;mag=40;$('#micro-magnification').value='40';img.src=s.image;img.alt='Учебная генеративная иллюстрация: образец '+(scene+1);
+  $('#micro-count').textContent=`${scene+1} / ${microScenes.length}`;$('#micro-feedback').textContent='Наведи резкость, чтобы разблокировать ответ.';$('#micro-explain').textContent='';$('#micro-next').disabled=true;
+  buttons.forEach(b=>{b.disabled=true;b.classList.remove('correct','wrong')});updateFocus();
+ }
+ focusSlider.addEventListener('input',e=>{focus=Number(e.target.value);updateFocus()});
+ $('#micro-magnification').addEventListener('change',e=>{mag=Number(e.target.value);updateFocus()});
+ buttons.forEach(b=>b.addEventListener('click',()=>{
+  if(answered||Math.abs(focus-microScenes[scene].best)>6)return;
+  answered=true;const s=microScenes[scene],ok=b.dataset.shape===s.answer;
+  $('#micro-feedback').textContent=ok?'✓ Верно!':'✕ Не совсем. Посмотрите объяснение.';
+  $('#micro-explain').textContent=s.desc;
+  buttons.forEach(x=>{x.disabled=true;if(x.dataset.shape===s.answer)x.classList.add('correct');else if(x===b)x.classList.add('wrong')});
+  $('#micro-next').disabled=false;$('#micro-next').textContent=scene===microScenes.length-1?'Начать заново →':'Следующий образец →';
+ }));
+ $('#micro-next').addEventListener('click',()=>{scene=(scene+1)%microScenes.length;setScene()});
+ setScene();
 }
 const caseSet=[
  {title:'Смешанная микрофлора в образце',body:'В условном учебном кейсе в образце обнаружены разные морфологические группы бактерий. Какой вывод корректнее?',answers:['Можно сразу назвать единственного возбудителя','Морфологические признаки сами по себе не доказывают этиологию заболевания','Любой обнаруженный микроорганизм вызывает болезнь'],correct:1,why:'Микроскопия даёт ориентировочную информацию. Для причинной связи нужны контекст, подходящие подтверждающие исследования и интерпретация.'},
